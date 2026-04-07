@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Trái Tim Này Cho Em ❤️</title>
+    <style>
+        body {
+            background-color: #ffe6eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            flex-direction: column;
+        }
+
+        /* --- NÚT TƯƠNG TÁC BAN ĐẦU --- */
+        #startScreen {
+            position: absolute;
+            z-index: 20;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .start-btn {
+            background-color: #ff3366;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
+            transition: transform 0.2s, background-color 0.2s;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .start-btn:hover {
+            background-color: #d60047;
+            transform: scale(1.05);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* --- CONTAINER TRÁI TIM --- */
+        .heart-container {
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            margin-top: -50px;
+
+            /* Ẩn đi và thu nhỏ lúc ban đầu */
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none;
+            transition: opacity 1.5s ease, transform 1.5s ease;
+        }
+
+        /* Class để hiện trái tim ra (phóng to và rõ dần) */
+        .heart-container.visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        /* Tạo hình trái tim bằng CSS */
+        .heart {
+            width: 100px;
+            height: 100px;
+            background-color: #ff3366;
+            position: relative;
+            transform: rotate(-45deg);
+            animation: heartbeat 1.5s infinite;
+            box-shadow: 0 0 40px rgba(255, 51, 102, 0.6);
+        }
+
+        .heart::before, .heart::after {
+            content: '';
+            width: 100px;
+            height: 100px;
+            background-color: #ff3366;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .heart::before { top: -50px; left: 0; }
+        .heart::after { top: 0; left: 50px; }
+
+        /* Hiệu ứng tim đập */
+        @keyframes heartbeat {
+            0% { transform: rotate(-45deg) scale(1); }
+            20% { transform: rotate(-45deg) scale(1.2); }
+            40% { transform: rotate(-45deg) scale(1); }
+            60% { transform: rotate(-45deg) scale(1.1); }
+            80% { transform: rotate(-45deg) scale(1); }
+        }
+
+        /* Tinh chỉnh thông điệp */
+        .message {
+            margin-top: 80px;
+            font-size: 26px;
+            color: #d60047;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            font-weight: bold;
+            max-width: 80%;
+            line-height: 1.5;
+            position: absolute;
+            top: 60%;
+        }
+
+        .message.show {
+            opacity: 1;
+        }
+
+        /* Hiệu ứng trái tim bay lên */
+        .floating-heart {
+            position: absolute;
+            font-size: 24px;
+            animation: floatUp 2.5s forwards;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-150px) scale(0.5); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="startScreen">
+    <button class="start-btn" onclick="startSurprise()">Chạm vào đây nhé 💌</button>
+</div>
+
+<div class="heart-container" onclick="revealMessage(event)">
+    <div class="heart"></div>
+</div>
+
+<div class="message" id="secretMessage">
+    Anh thật lòng xin lỗi vì những sai lầm đã khiến em phải tổn thương.<br>
+    Cảm ơn em đã bao dung. Anh sẽ cố gắng thay đổi để trở thành mảnh ghép hoàn hảo nhất cùng em đi tiếp chặng đường dài. Yêu em! ❤️
+    Xem trang web này mà cười là chân mau lành hơn đấy
+</div>
+
+<script>
+    // Hàm gọi khi nhấn nút "Chạm vào đây nhé"
+    function startSurprise() {
+        const startScreen = document.getElementById('startScreen');
+        const heartContainer = document.querySelector('.heart-container');
+
+        // Làm mờ nút bấm
+        startScreen.style.opacity = '0';
+
+        // Đợi 0.5s cho nút bấm mờ hẳn rồi ẩn nó đi và hiện trái tim lên
+        setTimeout(() => {
+            startScreen.style.display = 'none';
+            heartContainer.classList.add('visible');
+        }, 500);
+    }
+
+    let clicked = false;
+
+    // Hàm gọi khi nhấn vào trái tim
+    function revealMessage(event) {
+        if (!clicked) {
+            document.getElementById('secretMessage').classList.add('show');
+            document.querySelector('.heart').style.animationDuration = '0.5s'; // Tim đập nhanh lên
+            clicked = true;
+        }
+        createFloatingHearts(event.clientX, event.clientY);
+    }
+
+    // Hàm tạo trái tim bay bay
+    function createFloatingHearts(x, y) {
+        for (let i = 0; i < 6; i++) {
+            let heart = document.createElement('div');
+            heart.innerHTML = '💖';
+            heart.className = 'floating-heart';
+
+            heart.style.left = (x + (Math.random() * 80 - 40)) + 'px';
+            heart.style.top = (y + (Math.random() * 80 - 40)) + 'px';
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 2500);
+        }
+    }
+</script>
+</body>
+</html>
